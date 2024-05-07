@@ -5,12 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.strezh.composition.R
 import com.strezh.composition.databinding.FragmentWelcomeBinding
 
 class WelcomeFragment : Fragment() {
 
     private var _binding: FragmentWelcomeBinding? = null
-    private val binding : FragmentWelcomeBinding
+    private val binding: FragmentWelcomeBinding
         get() = _binding ?: throw RuntimeException("FragmentWelcomeBinding == null")
 
     override fun onCreateView(
@@ -26,10 +27,12 @@ class WelcomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonUnderstand.setOnClickListener {
-
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.main_container, ChooseLevelFragment.newInstance())
+                .addToBackStack(ChooseLevelFragment.NAME)
+                .commit()
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
