@@ -9,7 +9,6 @@ import com.strezh.composition.R
 import com.strezh.composition.data.GameRepositoryImpl
 import com.strezh.composition.databinding.FragmentGameBinding
 import com.strezh.composition.domain.entity.GameResult
-import com.strezh.composition.domain.entity.GameSettings
 import com.strezh.composition.domain.entity.Level
 import com.strezh.composition.domain.usecases.GetGameSettingsUseCase
 
@@ -61,7 +60,9 @@ class GameFragment : Fragment() {
     }
 
     private fun parseArgs() {
-        level = requireArguments().getSerializable(KEY_LEVEL) as Level
+        requireArguments().getParcelable<Level>(KEY_LEVEL)?.let {
+            level = it
+        }
     }
 
     private fun launchFinishFragment(gameResult: GameResult) {
@@ -78,7 +79,7 @@ class GameFragment : Fragment() {
             val instance = GameFragment()
             instance.apply {
                 arguments = Bundle().apply {
-                    putSerializable(KEY_LEVEL, level)
+                    putParcelable(KEY_LEVEL, level)
                 }
             }
 
