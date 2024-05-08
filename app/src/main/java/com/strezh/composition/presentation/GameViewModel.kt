@@ -2,9 +2,9 @@ package com.strezh.composition.presentation
 
 import android.app.Application
 import android.os.CountDownTimer
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.strezh.composition.R
 import com.strezh.composition.data.GameRepositoryImpl
 import com.strezh.composition.domain.entity.GameResult
@@ -14,11 +14,10 @@ import com.strezh.composition.domain.entity.Question
 import com.strezh.composition.domain.usecases.GenerateQuestionUseCase
 import com.strezh.composition.domain.usecases.GetGameSettingsUseCase
 
-class GameViewModel(application: Application) : AndroidViewModel(application) {
+class GameViewModel(private val level: Level, private val application: Application) : ViewModel() {
 
     private lateinit var gameSettings: GameSettings
 
-    private val context = application
     private val repository = GameRepositoryImpl
 
     private val generateQuestionUseCase = GenerateQuestionUseCase(repository)
@@ -61,16 +60,20 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private var totalAnswersCount = 0
     private var rightAnswersCount = 0
 
-    private fun getGameSettings(level: Level) {
-        gameSettings = getGameSettingsUseCase(level)
-        _minPercent.value = gameSettings.minPercentageOfRightAnswers
+    init {
+        startGame()
     }
 
-    fun startGame(level: Level) {
+    private fun startGame() {
         getGameSettings(level)
         updateProgress()
         startTimer()
         generateNewQuestion()
+    }
+
+    private fun getGameSettings(level: Level) {
+        gameSettings = getGameSettingsUseCase(level)
+        _minPercent.value = gameSettings.minPercentageOfRightAnswers
     }
 
     fun chooseAnswer(number: Int) {
@@ -94,7 +97,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         val percent = calcPercentOfRightAnswers()
         _percentOfRightAnswers.value = percent
         _progressAnswers.value = String.format(
-            context.resources.getString(R.string.progress_answers),
+            application.resources.getString(R.string.progress_answers),
             rightAnswersCount,
             gameSettings.minCountOfRightAnswers
         )
