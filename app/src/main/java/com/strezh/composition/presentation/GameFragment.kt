@@ -10,17 +10,16 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.strezh.composition.R
+import androidx.navigation.fragment.navArgs
 import com.strezh.composition.databinding.FragmentGameBinding
 import com.strezh.composition.domain.entity.GameResult
-import com.strezh.composition.domain.entity.Level
 
 class GameFragment : Fragment() {
 
-    private lateinit var level: Level
+    private val args by navArgs<GameFragmentArgs>()
 
     private val viewModelFactory: GameViewModelFactory by lazy {
-        GameViewModelFactory(level, requireActivity().application)
+        GameViewModelFactory(args.level, requireActivity().application)
     }
     private val viewModel: GameViewModel by lazy {
         ViewModelProvider(this, viewModelFactory)[GameViewModel::class.java]
@@ -32,7 +31,6 @@ class GameFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        parseArgs()
     }
 
     override fun onCreateView(
@@ -136,31 +134,9 @@ class GameFragment : Fragment() {
         }
     }
 
-    private fun parseArgs() {
-        requireArguments().getParcelable<Level>(KEY_LEVEL)?.let {
-            level = it
-        }
-    }
-
     private fun launchFinishFragment(gameResult: GameResult) {
-        val bundle = Bundle().apply {
-            putParcelable(GameFinishedFragment.GAME_RESULT, gameResult)
-        }
-        findNavController().navigate(R.id.action_gameFragment_to_gameFinishedFragment, bundle)
-    }
-
-    companion object {
-        const val NAME = "GameFragment"
-        const val KEY_LEVEL = "level"
-        fun newInstance(level: Level): GameFragment {
-            val instance = GameFragment()
-            instance.apply {
-                arguments = Bundle().apply {
-                    putParcelable(KEY_LEVEL, level)
-                }
-            }
-
-            return instance
-        }
+        findNavController().navigate(
+            GameFragmentDirections.actionGameFragmentToGameFinishedFragment(gameResult)
+        )
     }
 }
