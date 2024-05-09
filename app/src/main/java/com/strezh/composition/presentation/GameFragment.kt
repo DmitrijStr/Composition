@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.strezh.composition.R
 import com.strezh.composition.databinding.FragmentGameBinding
 import com.strezh.composition.domain.entity.GameResult
@@ -35,9 +36,7 @@ class GameFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentGameBinding.inflate(inflater, container, false)
 
@@ -144,15 +143,15 @@ class GameFragment : Fragment() {
     }
 
     private fun launchFinishFragment(gameResult: GameResult) {
-        requireActivity().supportFragmentManager.beginTransaction()
-            .add(R.id.main_container, GameFinishedFragment.newInstance(gameResult))
-            .addToBackStack(null)
-            .commit()
+        val bundle = Bundle().apply {
+            putParcelable(GameFinishedFragment.GAME_RESULT, gameResult)
+        }
+        findNavController().navigate(R.id.action_gameFragment_to_gameFinishedFragment, bundle)
     }
 
     companion object {
         const val NAME = "GameFragment"
-        private const val KEY_LEVEL = "level"
+        const val KEY_LEVEL = "level"
         fun newInstance(level: Level): GameFragment {
             val instance = GameFragment()
             instance.apply {

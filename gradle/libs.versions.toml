@@ -9,6 +9,7 @@ appcompat = "1.6.1"
 material = "1.11.0"
 activity = "1.8.0"
 constraintlayout = "2.1.4"
+androidx-navigation = "2.7.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -19,8 +20,12 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-navigation-fragment = { module = "androidx.navigation:navigation-fragment-ktx", name = "navigation", version.ref = "androidx-navigation" }
+androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", name = "navigation", version.ref = "androidx-navigation" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-
+parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+navigation = { id = "androidx.navigation.safeargs", version.ref = "androidx-navigation" }
